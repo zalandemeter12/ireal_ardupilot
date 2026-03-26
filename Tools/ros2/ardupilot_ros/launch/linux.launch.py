@@ -14,20 +14,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Launch ArduPilot SITL.
+Launch ArduPilot on Linux.
 
 Run with default arguments:
 
-ros2 launch ardupilot_sitl sitl.launch.py
+ros2 launch ardupilot_ros linux.launch.py
 
 Show launch arguments:
 
-ros2 launch ardupilot_sitl sitl.launch.py --show-args
+ros2 launch ardupilot_ros linux.launch.py --show-args
 """
-from ardupilot_sitl.launch import SITLLaunch
+from ardupilot_ros.launch import LinuxLaunch
 from launch import LaunchDescription
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description for ArduPilot SITL."""
-    return SITLLaunch.generate_launch_description()
+    """Generate a launch description for ArduPilot on Linux."""
+    return LinuxLaunch.generate_launch_description()

@@ -31,7 +31,7 @@
 #         self.ap_vehicle = "ArduCopter"
 #         self.ap_frame = "quad"
 #
-#         pkg = get_package_share_directory("ardupilot_sitl")
+#         pkg = get_package_share_directory("ardupilot_ros")
 #
 #         # The micro_ros_agent and ardupilot nodes do not expose params
 #         # as ROS params, parse the config file and send them in as node args.

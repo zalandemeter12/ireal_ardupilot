@@ -27,10 +27,10 @@ from launch.actions import IncludeLaunchDescription
 
 from pathlib import Path
 
-from ardupilot_sitl.launch import VirtualPortsLaunch
-from ardupilot_sitl.launch import MicroRosAgentLaunch
-from ardupilot_sitl.launch import MAVProxyLaunch
-from ardupilot_sitl.launch import SITLLaunch
+from ardupilot_ros.launch import VirtualPortsLaunch
+from ardupilot_ros.launch import MicroRosAgentLaunch
+from ardupilot_ros.launch import MAVProxyLaunch
+from ardupilot_ros.launch import SITLLaunch
 
 
 @pytest.fixture(scope="function")
@@ -133,7 +133,7 @@ def sitl_copter_dds_serial(device_dir, virtual_ports, micro_ros_agent_serial, ma
             "serial1": f"uart:{str(tty1)}",
             "defaults": str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "copter.parm",
@@ -142,7 +142,7 @@ def sitl_copter_dds_serial(device_dir, virtual_ports, micro_ros_agent_serial, ma
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_serial.parm",
@@ -187,7 +187,7 @@ def sitl_copter_dds_udp(micro_ros_agent_udp, mavproxy):
             "instance": "0",
             "defaults": str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "copter.parm",
@@ -196,7 +196,7 @@ def sitl_copter_dds_udp(micro_ros_agent_udp, mavproxy):
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_udp.parm",
@@ -239,7 +239,7 @@ def sitl_copter_dds_udp_use_ns(micro_ros_agent_udp, mavproxy):
             "instance": "0",
             "defaults": str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "copter.parm",
@@ -248,7 +248,7 @@ def sitl_copter_dds_udp_use_ns(micro_ros_agent_udp, mavproxy):
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_udp.parm",
@@ -257,7 +257,7 @@ def sitl_copter_dds_udp_use_ns(micro_ros_agent_udp, mavproxy):
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_use_ns.parm",
@@ -304,7 +304,7 @@ def sitl_plane_dds_serial(device_dir, virtual_ports, micro_ros_agent_serial, mav
             "serial1": f"uart:{str(tty1)}",
             "defaults": str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "models",
                     "plane.parm",
@@ -313,7 +313,7 @@ def sitl_plane_dds_serial(device_dir, virtual_ports, micro_ros_agent_serial, mav
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_serial.parm",
@@ -361,7 +361,7 @@ def sitl_plane_dds_udp(device_dir, virtual_ports, micro_ros_agent_udp, mavproxy)
             "instance": "0",
             "defaults": str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "models",
                     "plane.parm",
@@ -370,7 +370,7 @@ def sitl_plane_dds_udp(device_dir, virtual_ports, micro_ros_agent_udp, mavproxy)
             + ","
             + str(
                 Path(
-                    get_package_share_directory("ardupilot_sitl"),
+                    get_package_share_directory("ardupilot_ros"),
                     "config",
                     "default_params",
                     "dds_udp.parm",

@@ -14,16 +14,20 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Launch the microROS DDS agent.
+Launch ArduPilot SITL.
 
 Run with default arguments:
 
-ros2 launch ardupilot_sitl micro_ros_agent.launch.py
+ros2 launch ardupilot_ros sitl.launch.py
+
+Show launch arguments:
+
+ros2 launch ardupilot_ros sitl.launch.py --show-args
 """
-from ardupilot_sitl.launch import MicroRosAgentLaunch
+from ardupilot_ros.launch import SITLLaunch
 from launch import LaunchDescription
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description for the micro_ros_agent."""
-    return MicroRosAgentLaunch.generate_launch_description()
+    """Generate a launch description for ArduPilot SITL."""
+    return SITLLaunch.generate_launch_description()

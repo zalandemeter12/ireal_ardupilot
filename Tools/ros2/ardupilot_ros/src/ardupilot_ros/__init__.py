@@ -13,17 +13,4 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""
-Launch a process to create virtual ports.
-
-Run with default arguments:
-
-ros2 launch ardupilot_sitl virtual_ports.launch.py
-"""
-from ardupilot_sitl.launch import VirtualPortsLaunch
-from launch import LaunchDescription
-
-
-def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description for creating virtual ports using `socat`."""
-    return VirtualPortsLaunch.generate_launch_description()
+"""Main entry point for the `ardupilot_ros` package."""

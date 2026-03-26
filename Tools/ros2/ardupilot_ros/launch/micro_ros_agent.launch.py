@@ -13,4 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""Main entry point for the `ardupilot_sitl` package."""
+"""
+Launch the microROS DDS agent.
+
+Run with default arguments:
+
+ros2 launch ardupilot_ros micro_ros_agent.launch.py
+"""
+from ardupilot_ros.launch import MicroRosAgentLaunch
+from launch import LaunchDescription
+
+
+def generate_launch_description() -> LaunchDescription:
+    """Generate a launch description for the micro_ros_agent."""
+    return MicroRosAgentLaunch.generate_launch_description()

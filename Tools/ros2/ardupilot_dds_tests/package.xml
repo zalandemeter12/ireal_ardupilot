@@ -9,7 +9,7 @@
 
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>ardupilot_msgs</exec_depend>
-  <exec_depend>ardupilot_sitl</exec_depend>
+  <exec_depend>ardupilot_ros</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_pytest</exec_depend>
   <exec_depend>launch_ros</exec_depend>
@@ -26,7 +26,7 @@
   <test_depend>ament_xmllint</test_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ardupilot_msgs</test_depend>
-  <test_depend>ardupilot_sitl</test_depend>
+  <test_depend>ardupilot_ros</test_depend>
   <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>geographic_msgs</exec_depend>
   <test_depend>launch</test_depend>

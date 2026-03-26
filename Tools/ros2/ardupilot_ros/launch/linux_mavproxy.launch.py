@@ -14,11 +14,11 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Launch ArduPilot SITL, MAVProxy and the microROS DDS agent.
+Launch ArduPilot on Linux and a non-interactive instance of MAVProxy.
 
 Run with default arguments:
 
-ros2 launch ardupilot_sitl sitl_dds_serial.launch.py
+ros2 launch ardupilot_ros linux_mavproxy.launch.py
 """
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
@@ -28,42 +28,16 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description to bring up ArduPilot SITL with DDS."""
+    """Generate a launch description for combined ArduPilot on Linux and MAVProxy."""
     # Compose launch files.
-    virtual_ports = IncludeLaunchDescription(
+    linux = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
                 PathJoinSubstitution(
                     [
-                        FindPackageShare("ardupilot_sitl"),
+                        FindPackageShare("ardupilot_ros"),
                         "launch",
-                        "virtual_ports.launch.py",
-                    ]
-                ),
-            ]
-        )
-    )
-    micro_ros_agent = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [
-                PathJoinSubstitution(
-                    [
-                        FindPackageShare("ardupilot_sitl"),
-                        "launch",
-                        "micro_ros_agent.launch.py",
-                    ]
-                ),
-            ]
-        )
-    )
-    sitl = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [
-                PathJoinSubstitution(
-                    [
-                        FindPackageShare("ardupilot_sitl"),
-                        "launch",
-                        "sitl.launch.py",
+                        "linux.launch.py",
                     ]
                 ),
             ]
@@ -74,7 +48,7 @@ def generate_launch_description() -> LaunchDescription:
             [
                 PathJoinSubstitution(
                     [
-                        FindPackageShare("ardupilot_sitl"),
+                        FindPackageShare("ardupilot_ros"),
                         "launch",
                         "mavproxy.launch.py",
                     ]
@@ -83,11 +57,4 @@ def generate_launch_description() -> LaunchDescription:
         )
     )
 
-    return LaunchDescription(
-        [
-            virtual_ports,
-            micro_ros_agent,
-            sitl,
-            mavproxy,
-        ]
-    )
+    return LaunchDescription([linux, mavproxy])

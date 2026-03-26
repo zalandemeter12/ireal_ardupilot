@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ardupilot_sitl)
+project(ardupilot_ros)
 
 # --------------------------------------------------------------------------- #
 # Find dependencies.
@@ -11,6 +11,16 @@ find_package(ament_cmake_python REQUIRED)
 
 # TODO(srmainwaring): add cache variables for vehicle type, debug etc.
 # set(ARDUPILOT_VEHICLE "copter" CACHE STRING "Vehicle type")
+
+set(ENVIRONMENT_CONFIG "SITL" CACHE STRING "Environment configuration (SITL or LINUX)")
+
+if(ENVIRONMENT_CONFIG STREQUAL "SITL")
+    set(ARDUPILOT_BOARD "sitl")
+elseif(ENVIRONMENT_CONFIG STREQUAL "LINUX")
+    set(ARDUPILOT_BOARD "linux")
+else()
+    message(FATAL_ERROR "ENVIRONMENT_CONFIG must be SITL or LINUX")
+endif()
 
 option(ARDUPILOT_DISABLE_NETWORKING "Disable the networking API code" OFF)
 option(ARDUPILOT_DISABLE_SCRIPTING "Disable the scripting API code" OFF)
@@ -40,7 +50,7 @@ set(WAF_ENABLE_NETWORKING_TESTS $<$<BOOL:${ARDUPILOT_ENABLE_NETWORKING_TESTS}>:"
 set(WAF_ENABLE_PPP $<$<BOOL:${ARDUPILOT_ENABLE_PPP}>:"--enable-PPP">)
 
 add_custom_target(ardupilot_configure ALL
-  ${WAF_COMMAND} configure --board sitl
+  ${WAF_COMMAND} configure --board ${ARDUPILOT_BOARD}
     ${WAF_CONFIG}
     ${WAF_DISABLE_NETWORKING}
     ${WAF_DISABLE_SCRIPTING}
@@ -63,19 +73,19 @@ add_dependencies(ardupilot_build ardupilot_configure)
 
 # Install executables.
 install(PROGRAMS
-  ${ARDUPILOT_ROOT}/build/sitl/bin/antennatracker
-  ${ARDUPILOT_ROOT}/build/sitl/bin/arducopter
-  ${ARDUPILOT_ROOT}/build/sitl/bin/arducopter-heli
-  ${ARDUPILOT_ROOT}/build/sitl/bin/arduplane
-  ${ARDUPILOT_ROOT}/build/sitl/bin/ardurover
-  ${ARDUPILOT_ROOT}/build/sitl/bin/ardusub
-  ${ARDUPILOT_ROOT}/build/sitl/bin/blimp
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/antennatracker
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arducopter
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arducopter-heli
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arduplane
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardurover
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardusub
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/blimp
   DESTINATION bin/
 )
 
 # Install libs.
 install(DIRECTORY
-  ${ARDUPILOT_ROOT}/build/sitl/lib
+  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/lib
   DESTINATION ./
 )
 

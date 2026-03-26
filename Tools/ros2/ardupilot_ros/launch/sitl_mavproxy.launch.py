@@ -14,11 +14,11 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Launch ArduPilot SITL, MAVProxy and the microROS DDS agent.
+Launch ArduPilot SITL and a non-interactive instance of MAVProxy.
 
 Run with default arguments:
 
-ros2 launch ardupilot_sitl sitl_dds_udp.launch.py
+ros2 launch ardupilot_ros sitl_mavproxy.launch.py
 """
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
@@ -28,27 +28,14 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description to bring up ArduPilot SITL with DDS."""
+    """Generate a launch description for combined SITL and MAVProxy."""
     # Compose launch files.
-    micro_ros_agent = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [
-                PathJoinSubstitution(
-                    [
-                        FindPackageShare("ardupilot_sitl"),
-                        "launch",
-                        "micro_ros_agent.launch.py",
-                    ]
-                ),
-            ]
-        )
-    )
     sitl = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
                 PathJoinSubstitution(
                     [
-                        FindPackageShare("ardupilot_sitl"),
+                        FindPackageShare("ardupilot_ros"),
                         "launch",
                         "sitl.launch.py",
                     ]
@@ -61,7 +48,7 @@ def generate_launch_description() -> LaunchDescription:
             [
                 PathJoinSubstitution(
                     [
-                        FindPackageShare("ardupilot_sitl"),
+                        FindPackageShare("ardupilot_ros"),
                         "launch",
                         "mavproxy.launch.py",
                     ]
@@ -70,10 +57,4 @@ def generate_launch_description() -> LaunchDescription:
         )
     )
 
-    return LaunchDescription(
-        [
-            micro_ros_agent,
-            sitl,
-            mavproxy,
-        ]
-    )
+    return LaunchDescription([sitl, mavproxy])

@@ -14,20 +14,16 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Launch a non-interactive instance of MAVProxy.
+Launch a process to create virtual ports.
 
 Run with default arguments:
 
-ros2 launch ardupilot_sitl mavproxy.launch.py
-
-Show launch arguments:
-
-ros2 launch ardupilot_sitl mavproxy.launch.py --show-args
+ros2 launch ardupilot_ros virtual_ports.launch.py
 """
-from ardupilot_sitl.launch import MAVProxyLaunch
+from ardupilot_ros.launch import VirtualPortsLaunch
 from launch import LaunchDescription
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Generate a launch description for MAVProxy."""
-    return MAVProxyLaunch.generate_launch_description()
+    """Generate a launch description for creating virtual ports using `socat`."""
+    return VirtualPortsLaunch.generate_launch_description()

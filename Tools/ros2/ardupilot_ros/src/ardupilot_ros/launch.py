@@ -29,7 +29,7 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
-from ardupilot_sitl.actions import ExecuteFunction
+from ardupilot_ros.actions import ExecuteFunction
 
 TRUE_STRING = "True"
 FALSE_STRING = "False"
@@ -574,7 +574,7 @@ class SITLLaunch:
                 "defaults",
                 default_value=PathJoinSubstitution(
                     [
-                        FindPackageShare("ardupilot_sitl"),
+                        FindPackageShare("ardupilot_ros"),
                         "config",
                         "default_params",
                         "copter.parm",
@@ -662,5 +662,140 @@ class SITLLaunch:
                 description=f"set device string for SERIAL{label}.",
             )
             serial_args.append(arg)
+
+        return launch_args + serial_args
+    
+class LinuxLaunch:
+    """Launch functions for ArduPilot on Linux boards (real hardware)."""
+
+    MAX_SERIAL_PORTS = 10
+
+    @staticmethod
+    def generate_action(context: LaunchContext, *args, **kwargs) -> ExecuteProcess:
+        """Return a Linux board ArduPilot process."""
+        # Retrieve launch arguments.
+        command = LaunchConfiguration("command").perform(context)
+
+        # Display launch arguments.
+        print(f"command:          {command}")
+
+        # Base command - no --instance, --defaults, --wipe etc. on linux board binary.
+        cmd_args = [f"{command} "]
+
+        # Serial port arguments - primary interface for linux board binary.
+        for label in range(LinuxLaunch.MAX_SERIAL_PORTS):
+            arg = LaunchConfiguration(f"serial{label}").perform(context)
+            if arg:
+                cmd_args.append(f"--serial{label} {arg} ")
+                print(f"serial{label}:          {arg}")
+
+        # Optional path arguments.
+        log_directory = LaunchConfiguration("log_directory").perform(context)
+        if log_directory:
+            cmd_args.append(f"--log-directory {log_directory} ")
+            print(f"log_directory:    {log_directory}")
+
+        terrain_directory = LaunchConfiguration("terrain_directory").perform(context)
+        if terrain_directory:
+            cmd_args.append(f"--terrain-directory {terrain_directory} ")
+            print(f"terrain_directory: {terrain_directory}")
+
+        storage_directory = LaunchConfiguration("storage_directory").perform(context)
+        if storage_directory:
+            cmd_args.append(f"--storage-directory {storage_directory} ")
+            print(f"storage_directory: {storage_directory}")
+
+        cpu_affinity = LaunchConfiguration("cpu_affinity").perform(context)
+        if cpu_affinity:
+            cmd_args.append(f"--cpu-affinity {cpu_affinity} ")
+            print(f"cpu_affinity:     {cpu_affinity}")
+
+        # Create action.
+        linux_process = ExecuteProcess(
+            cmd=[cmd_args],
+            shell=True,
+            output="both",
+            respawn=False,
+        )
+        return linux_process
+
+    @staticmethod
+    def generate_launch_description_with_actions() -> Tuple[LaunchDescription, Dict[Text, ExecuteFunction]]:
+        """Generate a launch description for Linux board."""
+        launch_arguments = LinuxLaunch.generate_launch_arguments()
+
+        action = ExecuteFunction(function=LinuxLaunch.generate_action)
+
+        ld = LaunchDescription(
+            launch_arguments
+            + [
+                action,
+            ]
+        )
+        actions = {
+            "linux": action,
+        }
+        return ld, actions
+
+    @staticmethod
+    def generate_launch_description() -> LaunchDescription:
+        """Generate a launch description."""
+        ld, _ = LinuxLaunch.generate_launch_description_with_actions()
+        return ld
+
+    @staticmethod
+    def generate_launch_arguments() -> List[DeclareLaunchArgument]:
+        """Generate a list of launch arguments."""
+        launch_args = [
+            DeclareLaunchArgument(
+                "command",
+                default_value="arducopter",
+                description="ArduPilot binary to run (built with --board linux).",
+                choices=[
+                    "antennatracker",
+                    "arducopter-heli",
+                    "ardurover",
+                    "blimp",
+                    "arducopter",
+                    "arduplane",
+                    "ardusub",
+                ],
+            ),
+            DeclareLaunchArgument(
+                "log_directory",
+                default_value="",
+                description="Custom log directory path.",
+            ),
+            DeclareLaunchArgument(
+                "terrain_directory",
+                default_value="",
+                description="Custom terrain directory path.",
+            ),
+            DeclareLaunchArgument(
+                "storage_directory",
+                default_value="",
+                description="Custom storage directory path.",
+            ),
+            DeclareLaunchArgument(
+                "cpu_affinity",
+                default_value="",
+                description="CPU affinity, e.g. '1' or '1,3' or '1-3'.",
+            ),
+        ]
+
+        # Serial port launch arguments.
+        serial_args = []
+        for label in range(LinuxLaunch.MAX_SERIAL_PORTS):
+            serial_args.append(
+                DeclareLaunchArgument(
+                    f"serial{label}",
+                    default_value="",
+                    description=(
+                        f"Device string for SERIAL{label}. "
+                        f"Examples: /dev/ttyS1, tcp:192.168.1.1:5760, "
+                        f"udp:127.0.0.1:14550, udpin:0.0.0.0:14550"
+                    ),
+                )
+            )
 
         return launch_args + serial_args
