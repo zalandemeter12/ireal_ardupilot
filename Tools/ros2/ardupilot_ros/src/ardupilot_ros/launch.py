@@ -533,16 +533,16 @@ class SITLLaunch:
             # Required launch arguments.
             DeclareLaunchArgument(
                 "command",
-                default_value="arducopter",
+                default_value="arducopter-heli",
                 description="Run ArduPilot SITL.",
                 choices=[
-                    "antennatracker",
+                    # "antennatracker",
                     "arducopter-heli",
-                    "ardurover",
-                    "blimp",
-                    "arducopter",
-                    "arduplane",
-                    "ardusub",
+                    # "ardurover",
+                    # "blimp",
+                    # "arducopter",
+                    # "arduplane",
+                    # "ardusub",
                 ],
             ),
             DeclareLaunchArgument(
@@ -749,16 +749,16 @@ class LinuxLaunch:
         launch_args = [
             DeclareLaunchArgument(
                 "command",
-                default_value="arducopter",
+                default_value="arducopter-heli",
                 description="ArduPilot binary to run (built with --board linux).",
                 choices=[
-                    "antennatracker",
+                    # "antennatracker",
                     "arducopter-heli",
-                    "ardurover",
-                    "blimp",
-                    "arducopter",
-                    "arduplane",
-                    "ardusub",
+                    # "ardurover",
+                    # "blimp",
+                    # "arducopter",
+                    # "arduplane",
+                    # "ardusub",
                 ],
             ),
             DeclareLaunchArgument(

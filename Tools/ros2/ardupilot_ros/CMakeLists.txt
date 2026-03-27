@@ -22,6 +22,7 @@ else()
     message(FATAL_ERROR "ENVIRONMENT_CONFIG must be SITL or LINUX")
 endif()
 
+option(ARDUPILOT_USE_NATIVE_TOOLCHAIN "Use native toolchain" ON)
 option(ARDUPILOT_DISABLE_NETWORKING "Disable the networking API code" OFF)
 option(ARDUPILOT_DISABLE_SCRIPTING "Disable the scripting API code" OFF)
 option(ARDUPILOT_DISABLE_WATCHDOG "Build with watchdog disabled" OFF)
@@ -30,7 +31,7 @@ option(ARDUPILOT_ENABLE_NETWORKING_TESTS "Enable the networking test code" OFF)
 option(ARDUPILOT_ENABLE_PPP "Enable PPP networking" OFF)
 set(ARDUPILOT_WAF_CONFIGURE_ARGS "" CACHE STRING "Arbitrary waf configure arguments")
 set(ARDUPILOT_WAF_BUILD_ARGS "" CACHE STRING  "Arbitrary waf build arguments")
-
+set(ARDUPILOT_VEHICLE "heli" CACHE STRING "ArduPilot vehicle type")
 
 # NOTE: look for `waf` and set source and build directories to top level.
 # ${PROJECT_SOURCE_DIR} = ./Tools/ros2/ardupilot
@@ -41,16 +42,18 @@ find_program(WAF_COMMAND waf HINTS ${ARDUPILOT_ROOT})
 message(STATUS "WAF_COMMAND: ${WAF_COMMAND}")
 
 # Set the build config.
-set(WAF_CONFIG $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:"--debug">)
+  set(WAF_CONFIG $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:"--debug">)
 set(WAF_DISABLE_NETWORKING $<$<BOOL:${ARDUPILOT_DISABLE_NETWORKING}>:"--disable-networking">)
 set(WAF_DISABLE_SCRIPTING $<$<BOOL:${ARDUPILOT_DISABLE_SCRIPTING}>:"--disable-scripting">)
 set(WAF_DISABLE_WATCHDOG $<$<BOOL:${ARDUPILOT_DISABLE_WATCHDOG}>:"--disable-watchdog">)
 set(WAF_ENABLE_DDS $<$<BOOL:${ARDUPILOT_ENABLE_DDS}>:"--enable-DDS">)
 set(WAF_ENABLE_NETWORKING_TESTS $<$<BOOL:${ARDUPILOT_ENABLE_NETWORKING_TESTS}>:"--enable-networking-tests">)
 set(WAF_ENABLE_PPP $<$<BOOL:${ARDUPILOT_ENABLE_PPP}>:"--enable-PPP">)
-
+set(WAF_TOOLCHAIN $<$<BOOL:${ARDUPILOT_USE_NATIVE_TOOLCHAIN}>:"--toolchain=native">
+)
 add_custom_target(ardupilot_configure ALL
   ${WAF_COMMAND} configure --board ${ARDUPILOT_BOARD}
+    ${WAF_TOOLCHAIN}
     ${WAF_CONFIG}
     ${WAF_DISABLE_NETWORKING}
     ${WAF_DISABLE_SCRIPTING}
@@ -63,9 +66,10 @@ add_custom_target(ardupilot_configure ALL
 )
 
 add_custom_target(ardupilot_build ALL
-  ${WAF_COMMAND} build --enable-DDS ${WAF_CONFIG} ${ARDUPILOT_WAF_BUILD_ARGS}
+  ${WAF_COMMAND} ${ARDUPILOT_VEHICLE} --enable-DDS ${WAF_CONFIG} ${ARDUPILOT_WAF_BUILD_ARGS}
   WORKING_DIRECTORY ${ARDUPILOT_ROOT}
 )
+
 add_dependencies(ardupilot_build ardupilot_configure)
 
 # --------------------------------------------------------------------------- #
@@ -73,13 +77,13 @@ add_dependencies(ardupilot_build ardupilot_configure)
 
 # Install executables.
 install(PROGRAMS
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/antennatracker
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arducopter
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/antennatracker
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arducopter
   ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arducopter-heli
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arduplane
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardurover
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardusub
-  ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/blimp
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/arduplane
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardurover
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/ardusub
+  # ${ARDUPILOT_ROOT}/build/${ARDUPILOT_BOARD}/bin/blimp
   DESTINATION bin/
 )
 

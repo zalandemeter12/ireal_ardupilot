@@ -867,7 +867,7 @@ void AP_InertialSensor::_start_backends()
         _backends[i]->start();
     }
 
-#if AP_INERTIALSENSOR_ALLOW_NO_SENSORS
+#if !AP_INERTIALSENSOR_ALLOW_NO_SENSORS
     if (_gyro_count == 0 || _accel_count == 0) {
         AP_HAL::panic("INS needs at least 1 gyro and 1 accel");
     }

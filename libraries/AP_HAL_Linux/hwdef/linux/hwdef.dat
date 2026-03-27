@@ -1,19 +1,36 @@
-# hwdef for generic Linux configuration option, eg. running on your laptop
+# Custom Linux board: Dual CAN + External AHRS + Full DDS/ROS2 Setup
+define CONFIG_HAL_BOARD_SUBTYPE HAL_BOARD_SUBTYPE_LINUX_NONE
 
-env TOOLCHAIN native
-
-define HAL_BOARD_LOG_DIRECTORY "logs"
-define HAL_BOARD_TERRAIN_DIRECTORY "terrain"
-define HAL_BOARD_STORAGE_DIRECTORY "."
-define HAL_INS_DEFAULT HAL_INS_NONE
-
-# we can use virtual CAN on native builds
-define HAL_LINUX_USE_VIRTUAL_CAN 1
-
+# --- CAN INFRASTRUCTURE ---
 env WITH_CAN 1
 define HAL_NUM_CAN_IFACES 2
 define HAL_CANFD_SUPPORTED 1
 define CANARD_ENABLE_CANFD 1
+define HAL_CAN_DRIVER_DEFAULT 1
+define HAL_ENABLE_DRONECAN_DRIVERS 1  
+define HAL_BOARD_CAN_IFACE_NAME "can0"  
+define HAL_BOARD_CAN_IFACE1_NAME "can1"
+define AP_CAN_LOGGING_ENABLED 1
 
-# don't reset the time on user's laptops:
-define AP_HAL_LINUX_SET_HW_RTC_ENABLED 0
+# --- EXTERNAL AHRS & SENSOR BYPASS ---
+define AP_EXTERNAL_AHRS_ENABLED 1
+define AP_EXTERNAL_AHRS_HCE_ENABLED 1
+
+define AP_INERTIALSENSOR_ENABLED 1
+define AP_BARO_ENABLED 1
+define AP_COMPASS_ENABLED 1
+
+define AP_INERTIALSENSOR_ALLOW_NO_SENSORS 1
+define HAL_BARO_ALLOW_INIT_NO_BARO 1
+define AP_COMPASS_PROBING_ENABLED 0
+define AP_BARO_PROBE_EXTERNAL_I2C_BUSES 0
+
+# --- DDS/ROS2 ---
+define AP_DDS_ENABLED 1
+define AP_NETWORKING_ENABLED 1
+define AP_DDS_EXPERIMENTAL_ENABLED 1
+
+# --- FILESYSTEM PATHS ---
+define HAL_BOARD_LOG_DIRECTORY "/workspace/src/system_config/ardupilot/logs"
+define HAL_BOARD_STORAGE_DIRECTORY "/workspace/src/system_config/ardupilot/storage"
+define HAL_BOARD_TERRAIN_DIRECTORY "/workspace/src/system_config/ardupilot/terrain"

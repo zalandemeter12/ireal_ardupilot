@@ -72,6 +72,10 @@ public:
 #if AP_EXTERNAL_AHRS_SENSAITION_ENABLED
         SensAItion = 11,
 #endif
+
+#if AP_EXTERNAL_AHRS_HCE_ENABLED
+        HCE = 33,
+#endif
     };
 
     static AP_ExternalAHRS *get_singleton(void) {

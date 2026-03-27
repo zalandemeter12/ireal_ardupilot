@@ -541,6 +541,7 @@ void SRV_Channels::push()
             }
 #endif
             case AP_CAN::Protocol::None:
+            case AP_CAN::Protocol::HCE_CAN:
             default:
                 break;
         }
